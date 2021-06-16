@@ -1,0 +1,43 @@
+service: jillbao-dynamodb-api
+
+frameworkVersion: ">=1.0.0 < 2.4.1"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:us-east-1:429937773353:table/Transactions"
+
+functions:
+
+  list:
+    handler: transactions/list.list
+    events:
+      - http:
+          path: transactions
+          method: get
+          cors: true
+
+  get:
+    handler: transactions/get.get
+    events:
+      - http:
+          path: transactions/{id}
+          method: get
+          cors: true
+
+  post:
+    handler: transactions/create.create
+    events:
+      - http:
+          path: transactions
+          method: post
+          cors: true
